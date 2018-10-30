@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "microservices-example.grpc";
+option java_outer_classname = "GrpcProto";
+
+package grpc;
+
+service ProductService {
+    rpc CreateProduct (CreateProductRequest) returns (CreateProductReply) {}
+    rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductReply) {}
+    rpc Product (ProductRequest) returns (ProductReply) {}
+    rpc SearchProduct (SearchProductRequest) returns (SearchProductReply) {}
+}
+
+message CreateProductRequest {
+    string title = 1;
+    string manufacturer = 2;
+    string description = 3;
+    double price = 4;
+}
+
+message CreateProductReply {
+    string id = 1;
+}
+
+message DeleteProductRequest {
+    string id = 1;
+}
+
+message DeleteProductReply {
+    string id = 1;
+}
+
+message ProductRequest {
+    string id = 1;
+}
+
+message ProductReply {
+    string id = 1;
+    string title = 2;
+    string manufacturer = 3;
+    string description = 4;
+    double price = 5;
+    google.protobuf.Timestamp created = 6;
+}
+
+message SearchProductRequest {
+    string title = 1;
+}
+
+message SearchProductReply {
+    string id = 1;
+}
