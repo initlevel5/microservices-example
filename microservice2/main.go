@@ -21,7 +21,6 @@ func main() {
 	svc := mockdb.NewProductService(logger)
 
 	gs := agrpc.NewGrpcServer(svc, logger)
-
 	if err := gs.Serve(*addr); err != nil {
 		panic(err)
 	}

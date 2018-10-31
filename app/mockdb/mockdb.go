@@ -82,8 +82,7 @@ func (s *productService) CreateProduct(ctx context.Context, title string, price 
 }
 
 func (s *productService) DeleteProduct(ctx context.Context, id string) (string, error) {
-	_, ok := s.db[id]
-	if ok {
+	if _, ok := s.db[id]; ok {
 		delete(s.db, id)
 		return id, nil
 	}

@@ -17,9 +17,7 @@ type productService struct {
 }
 
 func NewProductService(logger *log.Logger) *productService {
-	return &productService{
-		Logger: logger,
-	}
+	return &productService{Logger: logger}
 }
 
 func (s *productService) CreateProduct(ctx context.Context, title string, price float64, manufacturer string, description string) (string, error) {
@@ -27,7 +25,7 @@ func (s *productService) CreateProduct(ctx context.Context, title string, price 
 }
 
 func (s *productService) DeleteProduct(ctx context.Context, id string) (string, error) {
-	return errNotImplemented
+	return "", errNotImplemented
 }
 
 func (s *productService) Product(ctx context.Context, id string) (*Product, error) {

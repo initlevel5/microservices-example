@@ -11,15 +11,15 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-type GrpcServer struct {
+type grpcServer struct {
 	svc app.ProductService
 	*grpc.Server
 	*log.Logger
 }
 
-func NewGrpcServer(svc app.ProductService, logger *log.Logger) *GrpcServer {
+func NewGrpcServer(svc app.ProductService, logger *log.Logger) *grpcServer {
 	gs := grpc.NewServer()
-	s := &GrpcServer{svc: svc, Server: gs, Logger: logger}
+	s := &grpcServer{svc: svc, Server: gs, Logger: logger}
 
 	RegisterProductServiceServer(gs, s)
 	reflection.Register(gs)
@@ -27,7 +27,7 @@ func NewGrpcServer(svc app.ProductService, logger *log.Logger) *GrpcServer {
 	return s
 }
 
-func (s *GrpcServer) Serve(addr string) error {
+func (s *grpcServer) Serve(addr string) error {
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		s.Printf("Serve(): Listen(): %v", err)
@@ -41,7 +41,7 @@ func (s *GrpcServer) Serve(addr string) error {
 	return nil
 }
 
-func (s *GrpcServer) CreateProduct(ctx context.Context, in *CreateProductRequest) (*CreateProductReply, error) {
+func (s *grpcServer) CreateProduct(ctx context.Context, in *CreateProductRequest) (*CreateProductReply, error) {
 	id, err := s.svc.CreateProduct(ctx, in.Title, in.Price, in.Manufacturer, in.Description)
 	if err != nil {
 		return &CreateProductReply{}, err
@@ -49,7 +49,7 @@ func (s *GrpcServer) CreateProduct(ctx context.Context, in *CreateProductRequest
 	return &CreateProductReply{Id: id}, nil
 }
 
-func (s *GrpcServer) DeleteProduct(ctx context.Context, in *DeleteProductRequest) (*DeleteProductReply, error) {
+func (s *grpcServer) DeleteProduct(ctx context.Context, in *DeleteProductRequest) (*DeleteProductReply, error) {
 	id, err := s.svc.DeleteProduct(ctx, in.Id)
 	if err != nil {
 		return &DeleteProductReply{}, err
@@ -57,7 +57,7 @@ func (s *GrpcServer) DeleteProduct(ctx context.Context, in *DeleteProductRequest
 	return &DeleteProductReply{Id: id}, nil
 }
 
-func (s *GrpcServer) Product(ctx context.Context, in *ProductRequest) (*ProductReply, error) {
+func (s *grpcServer) Product(ctx context.Context, in *ProductRequest) (*ProductReply, error) {
 	p, err := s.svc.Product(ctx, in.Id)
 	if err != nil {
 		return &ProductReply{}, err
@@ -73,7 +73,7 @@ func (s *GrpcServer) Product(ctx context.Context, in *ProductRequest) (*ProductR
 	}, nil
 }
 
-func (s *GrpcServer) SearchProduct(ctx context.Context, in *SearchProductRequest) (*SearchProductReply, error) {
+func (s *grpcServer) SearchProduct(ctx context.Context, in *SearchProductRequest) (*SearchProductReply, error) {
 	id, err := s.svc.SearchProduct(ctx, in.Title)
 	if err != nil {
 		return &SearchProductReply{}, err

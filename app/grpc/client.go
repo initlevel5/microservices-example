@@ -15,7 +15,7 @@ type GrpcClient struct {
 func NewGrpcClient(addr string, logger *log.Logger) (*GrpcClient, error) {
 	conn, err := grpc.Dial(addr, grpc.WithInsecure())
 	if err != nil {
-		logger.Printf("NewClient(): Dial(): %v", err)
+		logger.Printf("NewGrpcClient(): Dial(): %v", err)
 		return nil, err
 	}
 
