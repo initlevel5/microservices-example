@@ -6,7 +6,8 @@ import (
 	"os"
 
 	agrpc "github.com/initlevel5/microservices-example/app/grpc"
-	"github.com/initlevel5/microservices-example/app/mockdb"
+	"github.com/initlevel5/microservices-example/app/mock"
+	_ "github.com/initlevel5/microservices-example/app/postgres"
 )
 
 var (
@@ -18,7 +19,7 @@ func main() {
 
 	logger := log.New(os.Stdout, "service 2: ", log.LstdFlags)
 
-	svc := mockdb.NewProductService(logger)
+	svc := mock.NewProductService(logger)
 
 	gs := agrpc.NewGrpcServer(svc, logger)
 	if err := gs.Serve(*addr); err != nil {

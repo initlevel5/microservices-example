@@ -3,7 +3,10 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"log"
 
+	"github.com/initlevel5/microservices-example/app"
 	_ "github.com/lib/pq"
 )
 
@@ -11,6 +14,7 @@ var (
 	errNotImplemented = errors.New("postgres: not implemented")
 )
 
+// productService represents a PostgreSQL implementation of app.ProductService interface
 type productService struct {
 	db *sql.DB
 	*log.Logger
@@ -28,7 +32,7 @@ func (s *productService) DeleteProduct(ctx context.Context, id string) (string, 
 	return "", errNotImplemented
 }
 
-func (s *productService) Product(ctx context.Context, id string) (*Product, error) {
+func (s *productService) Product(ctx context.Context, id string) (*app.Product, error) {
 	return nil, errNotImplemented
 }
 

@@ -1,4 +1,4 @@
-package mockdb
+package mock
 
 import (
 	"context"
@@ -41,6 +41,7 @@ var (
 	}
 )
 
+// productService represents a mock implementation of app.ProductService interface
 type productService struct {
 	mu *sync.RWMutex
 	db map[string]*app.Product
