@@ -109,6 +109,7 @@ func (s *productService) Product(ctx context.Context, id string) (*app.Product, 
 			Price:        p.Price,
 			Manufacturer: p.Manufacturer,
 			Description:  p.Description,
+			Created:	  p.Created,
 		}, nil
 	}
 	return nil, errNotFound
