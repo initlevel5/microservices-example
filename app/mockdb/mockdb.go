@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/initlevel5/microservices-example/app"
@@ -16,7 +17,7 @@ var (
 )
 
 var (
-	products = []*app.Product{
+	defaultProducts = []*app.Product{
 		{
 			ID:           "1",
 			Title:        "Socks",
@@ -41,19 +42,21 @@ var (
 )
 
 type productService struct {
+	mu *sync.RWMutex
 	db map[string]*app.Product
 	*log.Logger
 }
 
 func NewProductService(logger *log.Logger) *productService {
 	s := &productService{
+		mu:     &sync.RWMutex{},
 		db:     make(map[string]*app.Product),
 		Logger: logger,
 	}
 
 	now := time.Now()
 
-	for _, p := range products {
+	for _, p := range defaultProducts {
 		p.Created = now
 		s.db[p.ID] = p
 	}
@@ -77,11 +80,17 @@ func (s *productService) CreateProduct(ctx context.Context, title string, price 
 		Description:  description,
 		Created:      time.Now(),
 	}
+
+	s.mu.Lock()
 	s.db[p.ID] = p
+	s.mu.Unlock()
+
 	return p.ID, nil
 }
 
 func (s *productService) DeleteProduct(ctx context.Context, id string) (string, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	if _, ok := s.db[id]; ok {
 		delete(s.db, id)
 		return id, nil
@@ -90,13 +99,23 @@ func (s *productService) DeleteProduct(ctx context.Context, id string) (string, 
 }
 
 func (s *productService) Product(ctx context.Context, id string) (*app.Product, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 	if p, ok := s.db[id]; ok {
-		return p, nil
+		return &app.Product{
+			ID:           p.ID,
+			Title:        p.Title,
+			Price:        p.Price,
+			Manufacturer: p.Manufacturer,
+			Description:  p.Description,
+		}, nil
 	}
 	return nil, errNotFound
 }
 
 func (s *productService) SearchProduct(ctx context.Context, title string) (string, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 	for _, p := range s.db {
 		if p.Title == title {
 			return p.ID, nil
