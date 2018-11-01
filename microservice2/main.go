@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	addr = flag.String("addr", ":50000", "address to listen on")
+	grpcAddr = flag.String("grpc_addr", ":50000", "gRPC tcp address to listen on")
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 	svc := mock.NewProductService(logger)
 
 	gs := agrpc.NewGrpcServer(svc, logger)
-	if err := gs.Serve(*addr); err != nil {
+	if err := gs.Serve(*grpcAddr); err != nil {
 		panic(err)
 	}
 }

@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	errAlreadyExists = errors.New("mockdb: already exists")
-	errNotFound      = errors.New("mockdb: not found")
+	errAlreadyExists = errors.New("mock: already exists")
+	errNotFound      = errors.New("mock: not found")
 )
 
 var (

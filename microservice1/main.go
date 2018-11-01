@@ -13,7 +13,8 @@ import (
 )
 
 var (
-	addr = flag.String("addr", "localhost:50000", "address to bind on")
+	httpAddr = flag.String("http_addr", ":8080", "HTTP tcp address to bind on")
+	grpcAddr = flag.String("grpc_addr", ":50000", "gRPC tcp address to bind on")
 )
 
 var page = []byte(`
@@ -34,7 +35,7 @@ func main() {
 
 	logger := log.New(os.Stdout, "service 1: ", log.LstdFlags)
 
-	gc, err := agrpc.NewGrpcClient(*addr, logger)
+	gc, err := agrpc.NewGrpcClient(*grpcAddr, logger)
 	if err != nil {
 		panic(err)
 	}
@@ -46,5 +47,5 @@ func main() {
 		w.Write(page)
 	}))
 	http.Handle("/query", &relay.Handler{Schema: schema})
-	logger.Fatal(http.ListenAndServe(":8080", nil))
+	logger.Fatal(http.ListenAndServe(*httpAddr, nil))
 }
