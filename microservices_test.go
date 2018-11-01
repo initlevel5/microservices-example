@@ -28,8 +28,12 @@ func TestMicroservices(t *testing.T) {
 		expected []byte
 	}{
 		{
-			[]byte(`{"query": "{product(id: \"1\") {id title created price}}"}`),
+			[]byte(`{"query":"{product(id:\"1\"){id title created price}}"}`),
 			[]byte(`{"data":{"product":{"id":"1","title":"Socks","created":"0001-01-01 00:00:00.000000 +0000 UTC","price":2.95}}}`),
+		},
+		{
+			[]byte(`{"query":"{product(id:\"1\"){id}}"}`),
+			[]byte(`{"data":{"product":{"id":"1"}}}`),
 		},
 	}
 
